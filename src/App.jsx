@@ -3,29 +3,38 @@ import Home from "./pages/Home";
 import BlogDetail from "./pages/BlogDetail";
 import Navbar from "./components/Navbar";
 import CreateBlog from "./pages/CreateBlog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
-  const [blogs, setBlogs] = useState([
-    {
-      id: 1,
-      title: "First Blog",
-      body: "This is the first blog post. It contains some interesting content.",
-      blogImage: "https://www.shutterstock.com/image-photo/bloggingblog-concepts-ideas-white-worktable-600nw-1029506242.jpg",
-      likes: 0,
-      views: 0,
-      comments: [],
-    },
-    {
-      id: 2,
-      title: "Second Blog",
-      body: "This is the second blog post. It contains some more interesting content.",
-      blogImage: "https://www.businesswest.co.uk/sites/default/files/styles/event_image/public/blog/featured/blog_images.jpg?itok=uv1yW4hI",
-      likes: 0,
-      views: 0,
-      comments: [],
-    },
-  ]);
+  const [blogs, setBlogs] = useState(() => {
+    // Load blogs from localStorage if available, else use default blogs
+    const savedBlogs = localStorage.getItem("blogs");
+    return savedBlogs ? JSON.parse(savedBlogs) : [
+      {
+        id: 1,
+        title: "First Blog",
+        body: "This is the first blog post. It contains some interesting content.",
+        blogImage: "https://www.shutterstock.com/image-photo/bloggingblog-concepts-ideas-white-worktable-600nw-1029506242.jpg",
+        likes: 0,
+        views: 0,
+        comments: [],
+      },
+      {
+        id: 2,
+        title: "Second Blog",
+        body: "This is the second blog post. It contains some more interesting content.",
+        blogImage: "https://www.businesswest.co.uk/sites/default/files/styles/event_image/public/blog/featured/blog_images.jpg?itok=uv1yW4hI",
+        likes: 0,
+        views: 0,
+        comments: [],
+      },
+    ];
+  });
+
+  useEffect(() => {
+    // Save blogs to localStorage whenever blogs state changes
+    localStorage.setItem("blogs", JSON.stringify(blogs));
+  }, [blogs]);
 
   const addBlog = (newBlog) => {
     setBlogs([...blogs, { ...newBlog, id: blogs.length + 1 }]);
